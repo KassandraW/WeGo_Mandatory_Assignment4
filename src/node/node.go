@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"bufio"
+	"os"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -41,18 +43,36 @@ func loopOfLife(){
 
 
 func main() { 
+	// set up log info 
+	filepath := "../grpc/Log_info"
+	Log_File, err := os.OpenFile(filepath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("could not open log file client: %v", err)
+	}
+	defer Log_File.Close()
+
+
 	// Set server up
 	server := &Node{}
 	server.state = StateReleased
 	server.lamport_clock = 0
 	server.cs_access = false
-	
+	// make reader avalable 
+	reader := bufio.NewReader(os.Stdin)
+	var line, _ = reader.ReadString('\n')
+
 	// repeat for every node in a loop, adding them to the node_connections list
-	conn, err := grpc.NewClient("localhost:5051", grpc.WithTransportCredentials(insecure.NewCredentials())) //connects to server at localhost:5050. Insecure.newcredentials is used to skip TLS encryption for simplification
+	for i := 0 ; i < 3; i++{
+		fmt.Println("to add a Node pleas enter adress info of 1 node from Adress_file")
+		log.Println("to add a Node pleas enter adress info of 1 node from Adress_file")
+
+		conn, err := grpc.NewClient(line, grpc.WithTransportCredentials(insecure.NewCredentials( ))) //connects to server. Insecure.newcredentials is used to skip TLS encryption for simplification
 	if err != nil {
-		log.Fatalf("Not working")
+		log.Fatalf("conection start Not working")
 	}
 	server.node_connections = append(server.node_connections, proto.NewNodeClient(conn))
+	} 
+	
 
 	go loopOfLife();
 
