@@ -42,5 +42,8 @@ func (s *ITU_databaseServer) start_server() {
 	if err != nil {
 		log.Fatalf("Did not work")
 	}
+}
 
+func critical_section(){
+	
 }

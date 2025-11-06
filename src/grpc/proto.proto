@@ -11,7 +11,8 @@ message Students {
 
 message Empty {} //this message will not receive any variables.
 
-service ITUDatabase { //maintain rpc calls between server and client. 
-    rpc GetStudents (Empty) returns (Students) {}; //is a function call. () is what it should send, and it should return Students. 
+
+service Node { //maintains rpc calls
+    //rpc GetStudents (Empty) returns (Students) {}; //is a function call. () is what it should send, and it should return Students. 
     //If you send GetStudents from a client it sends empty and then it returns Students
 }
