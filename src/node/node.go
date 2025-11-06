@@ -4,11 +4,14 @@ import (
 	proto "Mandatory4/grpc"
 	"log"
 	"net"
+
 	"google.golang.org/grpc"
 )
 
 type Node struct { 
 	proto.UnimplementedNodeServer
+	lamport_clock 		int64
+	cs_access			bool
 
 }
 
@@ -19,6 +22,8 @@ func critical_section(){
 
 func main() { //initializes server
 	server := &Node{}
+	server.lamport_clock = 0;
+	server.cs_access = false;
 	server.start_server() //starts the gRPC server
 }
 
