@@ -8,6 +8,7 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 // change states
@@ -22,9 +23,8 @@ type Node struct {
 	proto.UnimplementedNodeServer
 	lamport_clock 		int64
 	cs_access			bool
-	state				NodeState 		
-
-
+	state				NodeState 
+	node_connections			[]proto.NodeClient
 }
 
 
@@ -41,16 +41,31 @@ func loopOfLife(){
 
 
 func main() { 
+	// Set server up
 	server := &Node{}
 	server.state = StateReleased
-	server.lamport_clock = 0;
-	server.cs_access = false;
+	server.lamport_clock = 0
+	server.cs_access = false
+	
+	// repeat for every node in a loop, adding them to the node_connections list
+	conn, err := grpc.NewClient("localhost:5051", grpc.WithTransportCredentials(insecure.NewCredentials())) //connects to server at localhost:5050. Insecure.newcredentials is used to skip TLS encryption for simplification
+	if err != nil {
+		log.Fatalf("Not working")
+	}
+	server.node_connections = append(server.node_connections, proto.NewNodeClient(conn))
+
 	go loopOfLife();
+
+
+
+
 	server.start_server()
 }
 
 
 func (s *Node) Request(ctx context.Context, timestamp *proto.TimeStamp ) (*proto.Empty, error) {
+	s.state = StateWanted;
+
 	return &proto.Empty{}, nil
 }
 
