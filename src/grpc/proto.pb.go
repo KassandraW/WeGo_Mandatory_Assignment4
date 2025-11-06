@@ -21,27 +21,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Students struct {
+type TimeStamp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Students      []string               `protobuf:"bytes,1,rep,name=students,proto3" json:"students,omitempty"`
+	Ts            int64                  `protobuf:"varint,1,opt,name=ts,proto3" json:"ts,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Students) Reset() {
-	*x = Students{}
+func (x *TimeStamp) Reset() {
+	*x = TimeStamp{}
 	mi := &file_proto_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Students) String() string {
+func (x *TimeStamp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Students) ProtoMessage() {}
+func (*TimeStamp) ProtoMessage() {}
 
-func (x *Students) ProtoReflect() protoreflect.Message {
+func (x *TimeStamp) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -53,16 +53,16 @@ func (x *Students) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Students.ProtoReflect.Descriptor instead.
-func (*Students) Descriptor() ([]byte, []int) {
+// Deprecated: Use TimeStamp.ProtoReflect.Descriptor instead.
+func (*TimeStamp) Descriptor() ([]byte, []int) {
 	return file_proto_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Students) GetStudents() []string {
+func (x *TimeStamp) GetTs() int64 {
 	if x != nil {
-		return x.Students
+		return x.Ts
 	}
-	return nil
+	return 0
 }
 
 type Empty struct {
@@ -105,11 +105,14 @@ var File_proto_proto protoreflect.FileDescriptor
 
 const file_proto_proto_rawDesc = "" +
 	"\n" +
-	"\vproto.proto\"&\n" +
-	"\bStudents\x12\x1a\n" +
-	"\bstudents\x18\x01 \x03(\tR\bstudents\"\a\n" +
-	"\x05Empty2\x06\n" +
-	"\x04NodeB\x17Z\x15Mandatory4/grpc/protob\x06proto3"
+	"\vproto.proto\"\x1b\n" +
+	"\tTimeStamp\x12\x0e\n" +
+	"\x02ts\x18\x01 \x01(\x03R\x02ts\"\a\n" +
+	"\x05Empty2B\n" +
+	"\x04Node\x12\x1f\n" +
+	"\arequest\x12\n" +
+	".TimeStamp\x1a\x06.Empty\"\x00\x12\x19\n" +
+	"\x05reply\x12\x06.Empty\x1a\x06.Empty\"\x00B\x17Z\x15Mandatory4/grpc/protob\x06proto3"
 
 var (
 	file_proto_proto_rawDescOnce sync.Once
@@ -125,12 +128,16 @@ func file_proto_proto_rawDescGZIP() []byte {
 
 var file_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_proto_goTypes = []any{
-	(*Students)(nil), // 0: Students
-	(*Empty)(nil),    // 1: Empty
+	(*TimeStamp)(nil), // 0: TimeStamp
+	(*Empty)(nil),     // 1: Empty
 }
 var file_proto_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
+	0, // 0: Node.request:input_type -> TimeStamp
+	1, // 1: Node.reply:input_type -> Empty
+	1, // 2: Node.request:output_type -> Empty
+	1, // 3: Node.reply:output_type -> Empty
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
