@@ -7,10 +7,7 @@
 package proto
 
 import (
-	context "context"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,104 +15,62 @@ import (
 // Requires gRPC-Go v1.64.0 or later.
 const _ = grpc.SupportPackageIsVersion9
 
-const (
-	ITUDatabase_GetStudents_FullMethodName = "/ITUDatabase/GetStudents"
-)
-
-// ITUDatabaseClient is the client API for ITUDatabase service.
+// NodeClient is the client API for Node service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ITUDatabaseClient interface {
-	GetStudents(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Students, error)
+type NodeClient interface {
 }
 
-type iTUDatabaseClient struct {
+type nodeClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewITUDatabaseClient(cc grpc.ClientConnInterface) ITUDatabaseClient {
-	return &iTUDatabaseClient{cc}
+func NewNodeClient(cc grpc.ClientConnInterface) NodeClient {
+	return &nodeClient{cc}
 }
 
-func (c *iTUDatabaseClient) GetStudents(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Students, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Students)
-	err := c.cc.Invoke(ctx, ITUDatabase_GetStudents_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// ITUDatabaseServer is the server API for ITUDatabase service.
-// All implementations must embed UnimplementedITUDatabaseServer
+// NodeServer is the server API for Node service.
+// All implementations must embed UnimplementedNodeServer
 // for forward compatibility.
-type ITUDatabaseServer interface {
-	GetStudents(context.Context, *Empty) (*Students, error)
-	mustEmbedUnimplementedITUDatabaseServer()
+type NodeServer interface {
+	mustEmbedUnimplementedNodeServer()
 }
 
-// UnimplementedITUDatabaseServer must be embedded to have
+// UnimplementedNodeServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedITUDatabaseServer struct{}
+type UnimplementedNodeServer struct{}
 
-func (UnimplementedITUDatabaseServer) GetStudents(context.Context, *Empty) (*Students, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetStudents not implemented")
-}
-func (UnimplementedITUDatabaseServer) mustEmbedUnimplementedITUDatabaseServer() {}
-func (UnimplementedITUDatabaseServer) testEmbeddedByValue()                     {}
+func (UnimplementedNodeServer) mustEmbedUnimplementedNodeServer() {}
+func (UnimplementedNodeServer) testEmbeddedByValue()              {}
 
-// UnsafeITUDatabaseServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ITUDatabaseServer will
+// UnsafeNodeServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to NodeServer will
 // result in compilation errors.
-type UnsafeITUDatabaseServer interface {
-	mustEmbedUnimplementedITUDatabaseServer()
+type UnsafeNodeServer interface {
+	mustEmbedUnimplementedNodeServer()
 }
 
-func RegisterITUDatabaseServer(s grpc.ServiceRegistrar, srv ITUDatabaseServer) {
-	// If the following call pancis, it indicates UnimplementedITUDatabaseServer was
+func RegisterNodeServer(s grpc.ServiceRegistrar, srv NodeServer) {
+	// If the following call pancis, it indicates UnimplementedNodeServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&ITUDatabase_ServiceDesc, srv)
+	s.RegisterService(&Node_ServiceDesc, srv)
 }
 
-func _ITUDatabase_GetStudents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ITUDatabaseServer).GetStudents(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ITUDatabase_GetStudents_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ITUDatabaseServer).GetStudents(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// ITUDatabase_ServiceDesc is the grpc.ServiceDesc for ITUDatabase service.
+// Node_ServiceDesc is the grpc.ServiceDesc for Node service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ITUDatabase_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "ITUDatabase",
-	HandlerType: (*ITUDatabaseServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetStudents",
-			Handler:    _ITUDatabase_GetStudents_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto.proto",
+var Node_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "Node",
+	HandlerType: (*NodeServer)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams:     []grpc.StreamDesc{},
+	Metadata:    "proto.proto",
 }

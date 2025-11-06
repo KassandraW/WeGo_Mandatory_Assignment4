@@ -23,7 +23,7 @@ const (
 
 type Students struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Students      []string               `protobuf:"bytes,1,rep,name=students,proto3" json:"students,omitempty"` //repeated means that there can be more than one of this type. If it wasnt there it would only expect 1.
+	Students      []string               `protobuf:"bytes,1,rep,name=students,proto3" json:"students,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -108,9 +108,8 @@ const file_proto_proto_rawDesc = "" +
 	"\vproto.proto\"&\n" +
 	"\bStudents\x12\x1a\n" +
 	"\bstudents\x18\x01 \x03(\tR\bstudents\"\a\n" +
-	"\x05Empty21\n" +
-	"\vITUDatabase\x12\"\n" +
-	"\vGetStudents\x12\x06.Empty\x1a\t.Students\"\x00B\x17Z\x15Mandatory4/grpc/protob\x06proto3"
+	"\x05Empty2\x06\n" +
+	"\x04NodeB\x17Z\x15Mandatory4/grpc/protob\x06proto3"
 
 var (
 	file_proto_proto_rawDescOnce sync.Once
@@ -130,10 +129,8 @@ var file_proto_proto_goTypes = []any{
 	(*Empty)(nil),    // 1: Empty
 }
 var file_proto_proto_depIdxs = []int32{
-	1, // 0: ITUDatabase.GetStudents:input_type -> Empty
-	0, // 1: ITUDatabase.GetStudents:output_type -> Students
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
