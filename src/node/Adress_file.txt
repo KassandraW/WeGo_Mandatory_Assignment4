@@ -1,4 +1,5 @@
-NodeClient_1: "localhost:5051"
-NodeClient_2: "localhost:5052"
-NodeClient_3: "localhost:5053"
-NodeClient_4: "localhost:5054"
+Insert adress from between <> do not inclide <>
+NodeClient_1: <localhost:5051>
+NodeClient_2: <localhost:5052>
+NodeClient_3: <localhost:5053>
+NodeClient_4: <localhost:5054>
