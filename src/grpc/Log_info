@@ -1,2 +1,3 @@
 node.go:69: to add a Node pleas enter adress info of 1 node from Adress_file
-node.go:111: Did not work(start server)
+node.go:110: Node server is up and running 
+node.go:112: failed to start server
