@@ -8,8 +8,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"strconv"
-	"strings"
 	"time"
 
 	"google.golang.org/grpc"
@@ -30,7 +28,6 @@ type Node struct {
 	lamport_clock    int64
 	cs_access        bool
 	state            NodeState
-	node_num         int
 	node_connections []proto.NodeClient
 }
 
@@ -46,60 +43,52 @@ func loopOfLife() {
 
 }
 
-func main() {
-	// set up log info
-	filepath := "../grpc/Log_info"
-	Log_File, err := os.OpenFile(filepath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("could not open log file client: %v", err)
+func check(e error, msg string) {
+	if e != nil {
+		log.Fatalf(msg+": %v", e)
 	}
-	if err := os.Truncate(filepath, 0); // clear the log file on each run
-	err != nil {
-		log.Printf("Failed to truncate: %v", err)
-	}
+}
 
+func main() {
+	// Log
+	filepath := "../files/Log_info"
+	Log_File, err := os.OpenFile(filepath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	check(err, "could not open log file client")
+
+	err = os.Truncate(filepath, 0) //clear the log file on each run
+	check(err, "Failed to truncate")
 	defer Log_File.Close()
 
 	log.SetOutput(Log_File)
 	log.SetFlags(log.Lshortfile)
 
-	//get server port from user
-	reader := bufio.NewReader(os.Stdin)
-
-	name_counter := 1
-	// Set server up
+	// Server Setup
 	server := &Node{}
 	server.state = StateReleased
 	server.lamport_clock = 0
 	server.cs_access = false
-	fmt.Println("to add a Node pleas enter adress info of 1 node from Adress_file")
-	log.Println("to add a Node pleas enter adress info of 1 node from Adress_file")
-	for i := 0; i < 3; i++ {
-		adressLine, err := reader.ReadString('\n')
-		adressLine = strings.TrimSuffix(adressLine, "\n")
-		if i != 0 {
-			fmt.Println("pleas add next node ")
-			log.Println("pleas add next node ")
-		}
-		if err != nil {
-			fmt.Print("read input not avalable")
+
+	// Read ports from Nodes.txt
+	file, err := os.Open("../files/Nodes.txt")
+	check(err, "could not open Nodes.txt")
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		if err := scanner.Err(); err != nil {
 			log.Fatalf("scanner failed")
 		}
-		// repeat for every node in a loop, adding them to the node_connections list
 
-		conn, err := grpc.NewClient(adressLine, grpc.WithTransportCredentials(insecure.NewCredentials())) //connects to server. Insecure.newcredentials is used to skip TLS encryption for simplification
-		if err != nil {
-			log.Fatalf("conection start Not working")
-		}
-
+		port := scanner.Text()
+		conn, err := grpc.NewClient(port, grpc.WithTransportCredentials(insecure.NewCredentials())) //connects to server. Insecure.newcredentials is used to skip TLS encryption for simplification
+		check(err, "failed to connect to port "+port)
 		server.node_connections = append(server.node_connections, proto.NewNodeClient(conn))
-		fmt.Println("Node " + strconv.Itoa(name_counter) + " is running on port " + conn.Target())
-		log.Println("node running on port " + conn.Target())
-		log.Println("node running on port " + conn.Target())
-		name_counter++
+		fmt.Println("Connected to port " + conn.Target())
+		log.Println("Connected to port " + conn.Target())
 	}
 
-	go loopOfLife()
+	go loopOfLife() //starts the loop of life in a separate goroutine
 
 	server.start_server()
 
