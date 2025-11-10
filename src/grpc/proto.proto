@@ -4,18 +4,15 @@ option go_package = "Mandatory4/grpc/proto";
 // run the proto file with : 
 // protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative proto.proto
 
-message ReqInfo {
+message Msg_Info {
     int64 ts = 1;
     string port = 2;
 }
 
-message nodename{ //for log purposes
-    string name = 1;
-}
 
 message Empty {}
 
 service Node { 
-    rpc request (ReqInfo) returns (Empty){};
-    rpc reply(nodename) returns (Empty){};
+    rpc request (Msg_Info) returns (Empty){};
+    rpc reply(Msg_Info) returns (Empty){};
 }

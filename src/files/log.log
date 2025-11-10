@@ -34,3 +34,70 @@
 [5052] T13 : Reply from 5053
 [5052] T14 : Entering critical section
 [5052] T14 : Exiting critical section
+[5051] T1 : Node is up and running
+[5052] T1 : Node is up and running
+[5053] T1 : Node is up and running
+[5053] T2 : Sending a request to everyone
+[5051] T3 : Request from 5053
+[5051] T4 : Replying to request from 5053
+[5053] T3 : Reply from 5051
+[5052] T4 : Request from 5053
+[5052] T5 : Replying to request from 5053
+[5053] T4 : Reply from 5052
+[5053] T5 : Entering critical section
+[5053] Doing something in the critical section høhø
+[5052] T6 : Sending a request to everyone
+[5051] T7 : Request from 5052
+[5051] T8 : Replying to request from 5052
+[5052] T7 : Reply from 5051
+[5053] T8 : Request from 5052
+[5053] T9 : Putting the request from 5052 in the queue
+[5051] T9 : Sending a request to everyone
+[5052] T10 : Request from 5051
+[5052] T11 : Putting the request from 5051 in the queue
+[5053] T10 : Request from 5051
+[5053] T11 : Putting the request from 5051 in the queue
+[5053] T12 : Exiting critical section
+[5053] T14 : Replying to queued request from 5052
+[5052] T12 : Reply from 5053
+[5053] T14 : Replying to queued request from 5051
+[5051] T10 : Reply from 5053
+[5052] T13 : Entering critical section
+[5052] Doing something in the critical section høhø
+[501] T1 : Node is up and running
+[5051] T1 : Node is up and running
+[5052] T1 : Node is up and running
+[5053] T1 : Node is up and running
+[5053] T2 : Sending a request to everyone
+[5051] T3 : Request from 5053
+[5051] T4 : Replying to request from 5053
+[5053] T5 : Reply from 5051
+[5052] T6 : Request from 5053
+[5052] T7 : Replying to request from 5053
+[5053] T8 : Reply from 5052
+[5053] T9 : Entering critical section
+[5053] Doing something in the critical section høhø
+[5051] T5 : Sending a request to everyone
+[5052] T8 : Request from 5051
+[5052] T9 : Replying to request from 5051
+[5051] T10 : Reply from 5052
+[5053] T11 : Request from 5051
+[5053] T12 : Putting the request from 5051 in the queue
+[5052] T10 : Sending a request to everyone
+[5051] T11 : Request from 5052
+[5051] T12 : Putting the request from 5052 in the queue
+[5053] T13 : Request from 5052
+[5053] T14 : Putting the request from 5052 in the queue
+[5053] T15 : Exiting critical section
+[5053] T17 : Replying to queued request from 5051
+[5051] T18 : Reply from 5053
+[5053] T17 : Replying to queued request from 5052
+[5052] T18 : Reply from 5053
+[5051] T19 : Entering critical section
+[5051] Doing something in the critical section høhø
+[5051] T20 : Exiting critical section
+[5051] T22 : Replying to queued request from 5052
+[5052] T23 : Reply from 5051
+[5052] T24 : Entering critical section
+[5052] Doing something in the critical section høhø
+[5052] T25 : Exiting critical section

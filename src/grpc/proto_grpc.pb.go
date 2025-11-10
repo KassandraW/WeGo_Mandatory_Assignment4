@@ -27,8 +27,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NodeClient interface {
-	Request(ctx context.Context, in *ReqInfo, opts ...grpc.CallOption) (*Empty, error)
-	Reply(ctx context.Context, in *Nodename, opts ...grpc.CallOption) (*Empty, error)
+	Request(ctx context.Context, in *Msg_Info, opts ...grpc.CallOption) (*Empty, error)
+	Reply(ctx context.Context, in *Msg_Info, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type nodeClient struct {
@@ -39,7 +39,7 @@ func NewNodeClient(cc grpc.ClientConnInterface) NodeClient {
 	return &nodeClient{cc}
 }
 
-func (c *nodeClient) Request(ctx context.Context, in *ReqInfo, opts ...grpc.CallOption) (*Empty, error) {
+func (c *nodeClient) Request(ctx context.Context, in *Msg_Info, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, Node_Request_FullMethodName, in, out, cOpts...)
@@ -49,7 +49,7 @@ func (c *nodeClient) Request(ctx context.Context, in *ReqInfo, opts ...grpc.Call
 	return out, nil
 }
 
-func (c *nodeClient) Reply(ctx context.Context, in *Nodename, opts ...grpc.CallOption) (*Empty, error) {
+func (c *nodeClient) Reply(ctx context.Context, in *Msg_Info, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, Node_Reply_FullMethodName, in, out, cOpts...)
@@ -63,8 +63,8 @@ func (c *nodeClient) Reply(ctx context.Context, in *Nodename, opts ...grpc.CallO
 // All implementations must embed UnimplementedNodeServer
 // for forward compatibility.
 type NodeServer interface {
-	Request(context.Context, *ReqInfo) (*Empty, error)
-	Reply(context.Context, *Nodename) (*Empty, error)
+	Request(context.Context, *Msg_Info) (*Empty, error)
+	Reply(context.Context, *Msg_Info) (*Empty, error)
 	mustEmbedUnimplementedNodeServer()
 }
 
@@ -75,10 +75,10 @@ type NodeServer interface {
 // pointer dereference when methods are called.
 type UnimplementedNodeServer struct{}
 
-func (UnimplementedNodeServer) Request(context.Context, *ReqInfo) (*Empty, error) {
+func (UnimplementedNodeServer) Request(context.Context, *Msg_Info) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Request not implemented")
 }
-func (UnimplementedNodeServer) Reply(context.Context, *Nodename) (*Empty, error) {
+func (UnimplementedNodeServer) Reply(context.Context, *Msg_Info) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Reply not implemented")
 }
 func (UnimplementedNodeServer) mustEmbedUnimplementedNodeServer() {}
@@ -103,7 +103,7 @@ func RegisterNodeServer(s grpc.ServiceRegistrar, srv NodeServer) {
 }
 
 func _Node_Request_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ReqInfo)
+	in := new(Msg_Info)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -115,13 +115,13 @@ func _Node_Request_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Node_Request_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NodeServer).Request(ctx, req.(*ReqInfo))
+		return srv.(NodeServer).Request(ctx, req.(*Msg_Info))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Node_Reply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Nodename)
+	in := new(Msg_Info)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -133,7 +133,7 @@ func _Node_Reply_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: Node_Reply_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NodeServer).Reply(ctx, req.(*Nodename))
+		return srv.(NodeServer).Reply(ctx, req.(*Msg_Info))
 	}
 	return interceptor(ctx, in, info, handler)
 }

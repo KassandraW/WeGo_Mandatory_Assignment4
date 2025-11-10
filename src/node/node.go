@@ -34,7 +34,7 @@ type Node struct {
 	node_connections []client
 	l                sync.Mutex
 	reply_count      int
-	request_queue    []*proto.ReqInfo
+	request_queue    []*proto.Msg_Info
 }
 
 type client struct {
@@ -45,11 +45,11 @@ type client struct {
 // representation of the critical section
 func critical_section() {
 	fmt.Println("Doing something in the critical section høhø")
+	log.Println("Doing something in the critical section høhø")
 }
 
 // increments lamport clock
 func (s *Node) inc_clock() {
-
 	s.l.Lock()
 	s.lamport_clock++
 	s.l.Unlock()
@@ -65,7 +65,7 @@ func (s *Node) request_access() {
 	fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Sending a request to everyone")
 	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Sending a request to everyone")
 	for _, c := range s.node_connections {
-		_, err := c.nodeclient.Request(context.Background(), &proto.ReqInfo{Ts: s.lamport_clock, Port: s.node_port[len(s.node_port)-4:]})
+		_, err := c.nodeclient.Request(context.Background(), &proto.Msg_Info{Ts: s.lamport_clock, Port: s.node_port[len(s.node_port)-4:]})
 		check(err, "Could not send request to port "+c.port)
 	}
 
@@ -83,16 +83,20 @@ func (s *Node) request_access() {
 
 	//exit critical section after some time
 	time.Sleep(time.Second * 15)
+	s.inc_clock()
 	fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Exiting critical section")
 	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Exiting critical section")
 	s.inc_clock()
 	s.state = Released
 
 	//reply to all queued requests
+	s.inc_clock()
 	for _, req := range s.request_queue {
 		for _, c := range s.node_connections {
 			if c.port == req.Port {
-				_, err := c.nodeclient.Reply(context.Background(), &proto.Nodename{Name: s.node_port})
+				fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Replying to queued request from " + req.Port)
+				log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Replying to queued request from " + req.Port)
+				_, err := c.nodeclient.Reply(context.Background(), &proto.Msg_Info{Ts: s.lamport_clock, Port: s.node_port})
 				check(err, "Could not send reply to port "+c.port)
 			}
 		}
@@ -168,7 +172,7 @@ func main() {
 
 }
 
-func (s *Node) Request(ctx context.Context, req_info *proto.ReqInfo) (*proto.Empty, error) {
+func (s *Node) Request(ctx context.Context, req_info *proto.Msg_Info) (*proto.Empty, error) {
 	//Update lamport clock
 	s.lamport_clock = max(s.lamport_clock, req_info.Ts) + 1
 
@@ -181,15 +185,17 @@ func (s *Node) Request(ctx context.Context, req_info *proto.ReqInfo) (*proto.Emp
 		s.inc_clock() //local event i guess
 		fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Putting the request from " + req_info.Port + " in the queue")
 		log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Putting the request from " + req_info.Port + " in the queue")
-
 		//defer reply
 		s.request_queue = append(s.request_queue, req_info)
 
 	} else {
 		//send reply
+		s.inc_clock()
+		fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Replying to request from " + req_info.Port)
+		log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Replying to request from " + req_info.Port)
 		for _, c := range s.node_connections {
 			if c.port == req_info.Port {
-				_, err := c.nodeclient.Reply(context.Background(), &proto.Nodename{Name: s.node_port})
+				_, err := c.nodeclient.Reply(context.Background(), &proto.Msg_Info{Ts: s.lamport_clock, Port: s.node_port})
 				check(err, "Could not send reply to port "+c.port)
 				return &proto.Empty{}, nil
 			}
@@ -199,11 +205,12 @@ func (s *Node) Request(ctx context.Context, req_info *proto.ReqInfo) (*proto.Emp
 	return &proto.Empty{}, nil
 }
 
-func (s *Node) Reply(ctx context.Context, name *proto.Nodename) (*proto.Empty, error) {
+func (s *Node) Reply(ctx context.Context, name *proto.Msg_Info) (*proto.Empty, error) {
 	s.inc_clock()
+	s.lamport_clock = max(s.lamport_clock, name.Ts) + 1
 	s.reply_count++
-	fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Reply from " + name.Name)
-	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Reply from " + name.Name)
+	fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Reply from " + name.Port)
+	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Reply from " + name.Port)
 	return &proto.Empty{}, nil
 }
 
