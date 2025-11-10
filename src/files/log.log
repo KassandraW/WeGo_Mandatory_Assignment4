@@ -1,5 +1,60 @@
-node.go:91: Connected to port localhost:5051
-node.go:91: Connected to port localhost:5052
-node.go:91: Connected to port localhost:5053
-node.go:91: Connected to port localhost:5054
-node.go:112: The node on port 5050 is now up and running
+[5052] T1 : Node is up and running
+[5051] T1 : Node is up and running
+[5051] T2 : Sending a request to everyone
+[5051] T3 : Request from 5051
+[5052] T4 : Request from 5051
+[5051] T4 : Reply from 5052
+[5051] T1 : Node is up and running
+[5052] T1 : Node is up and running
+[5052] T2 : Sending a request to everyone
+[5051] T3 : Request from 5052
+[5052] T3 : Reply from 5051
+[5052] Sent a request to port 5051
+[5051] T1 : Node is up and running
+[5051] failed to start node on port 5051: listen tcp :5051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+[5052] T1 : Node is up and running
+[5052] T2 : Sending a request to everyone
+[5051] T3 : Request from 5052
+[5052] T3 : Reply from 5051
+[5051] T1 : Node is up and running
+[5052] T1 : Node is up and running
+[5052] T2 : Sending a request to everyone
+[5051] T3 : Request from 5052
+[5052] T3 : Reply from 5051
+[5052] 1 replies needed
+[5051] T1 : Node is up and running
+[5052] T1 : Node is up and running
+[5052] T2 : Sending a request to everyone
+[5051] T3 : Request from 5052
+[5052] T3 : Reply from 5051
+[5052] 1 replies needed
+[5052] T4 : Entering critical section
+[5051] failed to start node on port 5051: listen tcp :5051: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+[5051] T1 : Node is up and running
+[5052] T1 : Node is up and running
+[5052] T2 : Sending a request to everyone
+[5051] T3 : Request from 5052
+[5052] T3 : Reply from 5051
+[5052] T4 : Entering critical section
+[5051] T4 : Sending a request to everyone
+[5052] T5 : Request from 5051
+[5051] Could not send request to port 5052: rpc error: code = Unavailable desc = error reading from server: read tcp [::1]:53061->[::1]:5052: wsarecv: An existing connection was forcibly closed by the remote host.
+[5091] T1 : Node is up and running
+[5051] T1 : Node is up and running
+[5052] T1 : Node is up and running
+[5052] T2 : Sending a request to everyone
+[5051] T3 : Request from 5052
+[5052] T3 : Reply from 5051
+[5052] T4 : Entering critical section
+[5051] T4 : Sending a request to everyone
+[5052] T5 : Request from 5051
+[5051] Could not send request to port 5052: rpc error: code = Unavailable desc = error reading from server: read tcp [::1]:53084->[::1]:5052: wsarecv: An existing connection was forcibly closed by the remote host.
+[5051] T1 : Node is up and running
+[5052] T1 : Node is up and running
+[5052] T2 : Sending a request to everyone
+[5051] T3 : Request from 5052
+[5052] T3 : Reply from 5051
+[5052] T4 : Entering critical section
+[5051] T4 : Sending a request to everyone
+[5052] T5 : Request from 5051
+[5052] T5 : Putting the request from 5051 in the queue
