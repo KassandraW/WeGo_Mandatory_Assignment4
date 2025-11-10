@@ -1,2 +1,4 @@
-node.go:68: to add a Node pleas enter adress info of 1 node from Adress_file
-node.go:109: Node server is up and running 
+node.go:70: to add a Node pleas enter adress info of 1 node from Adress_file
+node.go:95: node running on port 5054
+node.go:96: node running on port 5054
+node.go:112: Node server is up and running 

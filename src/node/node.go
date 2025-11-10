@@ -9,6 +9,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 
 	//"time"
 
@@ -30,6 +31,7 @@ type Node struct {
 	lamport_clock    int64
 	cs_access        bool
 	state            NodeState
+	Node_num         int
 	node_connections []proto.NodeClient
 }
 
@@ -40,7 +42,7 @@ func critical_section() {
 func loopOfLife() {
 	// do some stuff that calculates if we want to access CS or not.
 	for {
-		//time.Sleep(time.Millisecond * 500)
+		time.Sleep(time.Millisecond * 500)
 	}
 
 }
@@ -68,7 +70,6 @@ func main() {
 	log.Println("to add a Node pleas enter adress info of 1 node from Adress_file")
 	adressLine, err := reader.ReadString('\n')
 	adressLine = strings.TrimSuffix(adressLine, "\n")
-	//fmt.Println("this is the adress line :" + adressLine)
 
 	// Set server up
 	server := &Node{}
@@ -83,18 +84,20 @@ func main() {
 	// repeat for every node in a loop, adding them to the node_connections list
 	for i := 0; i < 3; i++ {
 	}
-	fmt.Print("loooping!")
-
-	conn, err := grpc.NewClient("localhost:5052", grpc.WithTransportCredentials(insecure.NewCredentials())) //connects to server. Insecure.newcredentials is used to skip TLS encryption for simplification
+	//counter := i
+	conn, err := grpc.NewClient(adressLine, grpc.WithTransportCredentials(insecure.NewCredentials())) //connects to server. Insecure.newcredentials is used to skip TLS encryption for simplification
 	if err != nil {
 		log.Fatalf("conection start Not working")
 	}
 
 	server.node_connections = append(server.node_connections, proto.NewNodeClient(conn))
+	//fmt.Println("Node " + strconv.Itoa(counter) + " is running on port " + conn.Target())
+	log.Println("node running on port " + conn.Target())
+	log.Println("node running on port " + conn.Target())
 
 	go loopOfLife()
-
 	server.start_server()
+
 }
 
 func (s *Node) Request(ctx context.Context, timestamp *proto.TimeStamp) (*proto.Empty, error) {
