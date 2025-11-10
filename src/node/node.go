@@ -83,6 +83,20 @@ func (s *Node) request_access() {
 
 	//exit critical section after some time
 	time.Sleep(time.Second * 15)
+	fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Exiting critical section")
+	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Exiting critical section")
+	s.inc_clock()
+	s.state = Released
+
+	//reply to all queued requests
+	for _, req := range s.request_queue {
+		for _, c := range s.node_connections {
+			if c.port == req.Port {
+				_, err := c.nodeclient.Reply(context.Background(), &proto.Nodename{Name: s.node_port})
+				check(err, "Could not send reply to port "+c.port)
+			}
+		}
+	}
 }
 
 // currently just a loop that waits for user input to request access to critical section
@@ -92,6 +106,10 @@ func (s *Node) loopOfLife() {
 		fmt.Scan(&input)
 
 		if input == "cs" {
+			if s.state != Released {
+				fmt.Println("You either already have access, or is currently requesting access, dumbass")
+				continue
+			}
 			go s.request_access()
 		}
 		time.Sleep(time.Millisecond * 500)
@@ -158,13 +176,13 @@ func (s *Node) Request(ctx context.Context, req_info *proto.ReqInfo) (*proto.Emp
 	fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Request from " + req_info.Port)
 	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Request from " + req_info.Port)
 
-	//We only reply when we arent currently in "HELD", or "WANTED"  with a lower timestamp
+	//We only reply when we arent currently in "HELD", or "WANTED"  and the request has a lower timestamp
 	if s.state == Held || (s.state == Wanted && s.lamport_clock > req_info.Ts) {
 		s.inc_clock() //local event i guess
 		fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Putting the request from " + req_info.Port + " in the queue")
 		log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Putting the request from " + req_info.Port + " in the queue")
-		//defer reply
 
+		//defer reply
 		s.request_queue = append(s.request_queue, req_info)
 
 	} else {
