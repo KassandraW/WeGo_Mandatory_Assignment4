@@ -14,7 +14,7 @@ Section will eventually gain access
 
 Technical Requirements:
 
-- Implement the service's nodes using Golang []
+- Implement the service's nodes using Golang [x]
 
 - Provide a README.md file in your source code repository that
   explains how to start your system []
