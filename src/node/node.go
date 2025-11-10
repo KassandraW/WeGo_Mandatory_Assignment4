@@ -52,7 +52,7 @@ func check(e error, msg string) {
 
 func main() {
 	// Log
-	filepath := "../files/Log_info"
+	filepath := "../files/log.log"
 	Log_File, err := os.OpenFile(filepath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	check(err, "could not open log file client")
 
@@ -72,8 +72,8 @@ func main() {
 	fmt.Scanln(&server.node_port)
 
 	// Read ports from Nodes.txt
-	file, err := os.Open("../files/Nodes.txt")
-	check(err, "could not open Nodes.txt")
+	file, err := os.Open("../files/nodes.txt")
+	check(err, "could not open nodes.txt")
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
@@ -109,8 +109,8 @@ func (s *Node) start_server() {
 	if err != nil {
 		log.Fatalf("failed to start node on port %s: %v", s.node_port, err)
 	}
-	log.Println("The node on port " + s.node_port + " is nowup and running")
-	fmt.Println("The node on port " + s.node_port + " is nowup and running")
+	log.Println("The node on port " + s.node_port + " is now up and running")
+	fmt.Println("The node on port " + s.node_port + " is now up and running")
 
 	proto.RegisterNodeServer(grpcServer, s) //registers the server implementation with gRPC
 
