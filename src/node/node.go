@@ -8,10 +8,9 @@ import (
 	"log"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 	"time"
-
-	//"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -31,7 +30,7 @@ type Node struct {
 	lamport_clock    int64
 	cs_access        bool
 	state            NodeState
-	Node_num         int
+	node_num         int
 	node_connections []proto.NodeClient
 }
 
@@ -66,36 +65,42 @@ func main() {
 
 	//get server port from user
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("to add a Node pleas enter adress info of 1 node from Adress_file")
-	log.Println("to add a Node pleas enter adress info of 1 node from Adress_file")
-	adressLine, err := reader.ReadString('\n')
-	adressLine = strings.TrimSuffix(adressLine, "\n")
 
+	name_counter := 1
 	// Set server up
 	server := &Node{}
 	server.state = StateReleased
 	server.lamport_clock = 0
 	server.cs_access = false
-
-	if err != nil {
-		fmt.Print("read input not avalable")
-		log.Fatalf("scanner failed")
-	}
-	// repeat for every node in a loop, adding them to the node_connections list
+	fmt.Println("to add a Node pleas enter adress info of 1 node from Adress_file")
+	log.Println("to add a Node pleas enter adress info of 1 node from Adress_file")
 	for i := 0; i < 3; i++ {
-	}
-	//counter := i
-	conn, err := grpc.NewClient(adressLine, grpc.WithTransportCredentials(insecure.NewCredentials())) //connects to server. Insecure.newcredentials is used to skip TLS encryption for simplification
-	if err != nil {
-		log.Fatalf("conection start Not working")
-	}
+		adressLine, err := reader.ReadString('\n')
+		adressLine = strings.TrimSuffix(adressLine, "\n")
+		if i != 0 {
+			fmt.Println("pleas add next node ")
+			log.Println("pleas add next node ")
+		}
+		if err != nil {
+			fmt.Print("read input not avalable")
+			log.Fatalf("scanner failed")
+		}
+		// repeat for every node in a loop, adding them to the node_connections list
 
-	server.node_connections = append(server.node_connections, proto.NewNodeClient(conn))
-	//fmt.Println("Node " + strconv.Itoa(counter) + " is running on port " + conn.Target())
-	log.Println("node running on port " + conn.Target())
-	log.Println("node running on port " + conn.Target())
+		conn, err := grpc.NewClient(adressLine, grpc.WithTransportCredentials(insecure.NewCredentials())) //connects to server. Insecure.newcredentials is used to skip TLS encryption for simplification
+		if err != nil {
+			log.Fatalf("conection start Not working")
+		}
+
+		server.node_connections = append(server.node_connections, proto.NewNodeClient(conn))
+		fmt.Println("Node " + strconv.Itoa(name_counter) + " is running on port " + conn.Target())
+		log.Println("node running on port " + conn.Target())
+		log.Println("node running on port " + conn.Target())
+		name_counter++
+	}
 
 	go loopOfLife()
+
 	server.start_server()
 
 }
@@ -109,8 +114,8 @@ func (s *Node) Request(ctx context.Context, timestamp *proto.TimeStamp) (*proto.
 func (s *Node) start_server() {
 	grpcServer := grpc.NewServer()              //Creates a new gRPC server instance
 	listener, err := net.Listen("tcp", ":5050") //Listens on TCP port 5050 using net.Listen
-	log.Println("Node server is up and running ")
-	fmt.Println("Node server is up and running ")
+	log.Println("Node servers are up and running ")
+	fmt.Println("Node servers are up and running ")
 	if err != nil {
 		log.Fatalf("failed to start server")
 	}
@@ -122,4 +127,5 @@ func (s *Node) start_server() {
 	if err != nil {
 		log.Fatalf("Did not work")
 	}
+
 }
