@@ -1,0 +1,5 @@
+node.go:91: Connected to port localhost:5051
+node.go:91: Connected to port localhost:5052
+node.go:91: Connected to port localhost:5053
+node.go:91: Connected to port localhost:5054
+node.go:112: The node on port 5050 is now up and running
