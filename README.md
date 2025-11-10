@@ -12,3 +12,7 @@ Open a terminal for each node you want to run. Navigate to src/node with `cd src
 Once every node is run, you can try to access the critical section by typing `cs` in the terminal of a node. This will start the process of the node sending out requests. Try gaining access on multiple nodes.
 
 
+### 3. The Log 
+Nodes output log messages to log.log in the files directory. This file does not clear itself, it has to be manually deleted, unfortunately :( So make sure to delete this file before running any nodes for a clean output. 
+
+
