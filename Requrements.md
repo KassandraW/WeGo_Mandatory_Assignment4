@@ -17,12 +17,12 @@ Technical Requirements:
 - Implement the service's nodes using Golang [x]
 
 - Provide a README.md file in your source code repository that
-  explains how to start your system []
+  explains how to start your system [x]
 
 - Use gRPC for message passing between nodes (hint: each node is both
   a grpc server and a client to every other node) []
 
-- Demonstrate that the system can start with at least three nodes []
+- Demonstrate that the system can start with at least three nodes [x]
 
 - Show, using system logs, a sequence of messages that leads to a node
   gaining access to the Critical Section. []
