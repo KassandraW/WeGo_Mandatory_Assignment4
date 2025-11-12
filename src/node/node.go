@@ -35,6 +35,7 @@ type Node struct {
 	l                sync.Mutex
 	reply_count      int
 	request_queue    []*proto.Msg_Info
+	cur_request_ts	 int64
 }
 
 type client struct {
@@ -60,7 +61,7 @@ func (s *Node) request_access() {
 	s.inc_clock()
 	s.state = Wanted
 	s.reply_count = 0
-
+	s.cur_request_ts = s.lamport_clock;
 	//send request to all nodes
 	fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Sending a request to everyone")
 	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Sending a request to everyone")
@@ -181,7 +182,7 @@ func (s *Node) Request(ctx context.Context, req_info *proto.Msg_Info) (*proto.Em
 	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Request from " + req_info.Port)
 
 	//We only reply when we arent currently in "HELD", or "WANTED"  and the request has a lower timestamp
-	if s.state == Held || (s.state == Wanted && s.lamport_clock > req_info.Ts) {
+	if s.state == Held || (s.state == Wanted && s.cur_request_ts < req_info.Ts) {
 		s.inc_clock() //local event i guess
 		fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Putting the request from " + req_info.Port + " in the queue")
 		log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Putting the request from " + req_info.Port + " in the queue")
@@ -200,7 +201,6 @@ func (s *Node) Request(ctx context.Context, req_info *proto.Msg_Info) (*proto.Em
 				return &proto.Empty{}, nil
 			}
 		}
-
 	}
 	return &proto.Empty{}, nil
 }
@@ -231,5 +231,4 @@ func (s *Node) start_server() {
 	if err != nil {
 		log.Fatalf("Did not work")
 	}
-
 }

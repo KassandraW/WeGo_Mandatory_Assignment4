@@ -9,7 +9,6 @@ message Msg_Info {
     string port = 2;
 }
 
-
 message Empty {}
 
 service Node { 
