@@ -20,12 +20,12 @@ Technical Requirements:
   explains how to start your system [x]
 
 - Use gRPC for message passing between nodes (hint: each node is both
-  a grpc server and a client to every other node) []
+  a grpc server and a client to every other node) [X]
 
 - Demonstrate that the system can start with at least three nodes [x]
 
 - Show, using system logs, a sequence of messages that leads to a node
-  gaining access to the Critical Section. []
+  gaining access to the Critical Section. [X]
 
 
 Note. Implement some sort of service discovery so that nodes can locate each
@@ -39,15 +39,15 @@ other. Options to consider include:
 
 Hand-in Requirements:
 
-- Submit a single report as a PDF file (maximum 2 pages) []
+- Submit a single report as a PDF file (maximum 2 pages) [X]
 
-- Describe how your system meets the System Requirements (R1, R2, and R3) []
+- Describe how your system meets the System Requirements (R1, R2, and R3) [x]
 
 - Provide a discussion of your algorithm, using examples from your
   logs (as per Technical Requirement 5) []
 
-- Include a link to a Git repository with your source code in the report []
+- Include a link to a Git repository with your source code in the report [x]
 
 - Append system logs in the report's appendix to demonstrate that the
-  requirements are met []
+  requirements are met [x]
 
