@@ -20,9 +20,9 @@ import (
 type NodeState int
 
 const (
-	Released NodeState = iota
-	Held
-	Wanted
+	RELEASED NodeState = iota
+	HELD
+	WANTED
 )
 
 type Node struct {
@@ -59,7 +59,7 @@ func (s *Node) inc_clock() {
 // starts the process of accessing the critical section
 func (s *Node) request_access() {
 	s.inc_clock()
-	s.state = Wanted
+	s.state = WANTED
 	s.reply_count = 0
 	s.cur_request_ts = s.lamport_clock;
 	//send request to all nodes
@@ -77,7 +77,7 @@ func (s *Node) request_access() {
 
 	//enter critical section
 	s.inc_clock()
-	s.state = Held
+	s.state = HELD
 	fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Entering critical section")
 	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Entering critical section")
 	critical_section()
@@ -88,7 +88,7 @@ func (s *Node) request_access() {
 	fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Exiting critical section")
 	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Exiting critical section")
 	s.inc_clock()
-	s.state = Released
+	s.state = RELEASED
 
 	//reply to all queued requests
 	s.inc_clock()
@@ -111,7 +111,7 @@ func (s *Node) loopOfLife() {
 		fmt.Scan(&input)
 
 		if input == "cs" {
-			if s.state != Released {
+			if s.state != RELEASED {
 				fmt.Println("You either already have access, or is currently requesting access, dumbass")
 				continue
 			}
@@ -140,7 +140,7 @@ func main() {
 
 	// Server Setup
 	server := &Node{}
-	server.state = Released
+	server.state = RELEASED
 	server.lamport_clock = 0
 	server.cs_access = false
 	fmt.Println("Please input the nodes port:")
@@ -182,7 +182,7 @@ func (s *Node) Request(ctx context.Context, req_info *proto.Msg_Info) (*proto.Em
 	log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Request from " + req_info.Port)
 
 	//We only reply when we arent currently in "HELD", or "WANTED"  and the request has a lower timestamp
-	if s.state == Held || (s.state == Wanted && s.cur_request_ts < req_info.Ts) {
+	if s.state == HELD || (s.state == WANTED && s.cur_request_ts < req_info.Ts) {
 		s.inc_clock() //local event i guess
 		fmt.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Putting the request from " + req_info.Port + " in the queue")
 		log.Println("T" + strconv.Itoa(int(s.lamport_clock)) + " : Putting the request from " + req_info.Port + " in the queue")
